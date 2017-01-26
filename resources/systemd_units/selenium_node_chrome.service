@@ -1,0 +1,10 @@
+[Unit]
+Description=Selenium Chrome Node
+After=network.target
+Requires=selenium_hub.service
+
+[Service]
+ExecStart=/usr/lib/selenium/selenium_node_chrome.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,60 @@
+---
+  - hosts: all
+    roles: 
+    - { role: ansiblebit.oracle-java }
+    tasks:
+      # Prerequesites
+      - apt: name=unzip
+        # become: true
+      - apt: name=wget
+        # become: true
+      - apt: name=dbus-x11
+      - name: Install XVFB
+        apt: name=xvfb
+        # become: true
+      
+        # become: true
+      # setup selenium
+      - file: path=/usr/lib/selenium state=directory mode=0755
+      - copy: dest=/usr/lib/selenium src=./resources/selenium_scripts/ mode=0755
+
+      - copy: dest=/etc/systemd/system src=./resources/systemd_units/ mode=0644
+
+      #- name: Install Git
+      #  apt: name=git
+        # become: true
+      - get_url:
+          url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb 
+          dest: /root/google-chrome-stable_current_amd64.deb 
+        # become: true
+      - shell: dpkg -i --force-all /root/google-chrome-stable_current_amd64.deb
+        args:
+          creates: /usr/bin/google-chrome
+        # become: true
+        ignore_errors: yes
+      - shell: apt-get -f -y install 
+        # become: true
+      # CHROMEDRIVER
+      
+      - unarchive: 
+          src: https://chromedriver.storage.googleapis.com/2.27/chromedriver_linux64.zip 
+          remote_src: yes
+          dest: /usr/lib/selenium
+      - get_url:
+          url: http://selenium-release.storage.googleapis.com/3.0/selenium-server-standalone-3.0.1.jar
+          dest: /usr/lib/selenium  
+      - systemd: name=xvfb state=started enabled=yes
+        # become: true
+      - systemd: name=selenium_hub state=started enabled=yes
+      - systemd: name=selenium_node_chrome state=started enabled=yes
+      
+
+
+
+     
+
+
+
+
+
+

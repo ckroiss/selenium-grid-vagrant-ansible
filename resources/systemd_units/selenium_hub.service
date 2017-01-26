@@ -1,0 +1,9 @@
+[Unit]
+Description=Selenium Hub
+After=network.target
+
+[Service]
+ExecStart=/usr/lib/selenium/selenium_hub.sh
+
+[Install]
+WantedBy=multi-user.target
